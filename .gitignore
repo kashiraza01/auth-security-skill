@@ -1,0 +1,43 @@
+# Dependencies
+node_modules
+.npm
+
+# Build output
+dist
+dist-ssr
+build
+.next
+out
+*.tsbuildinfo
+
+# Env
+.env
+.env.local
+.env.*.local
+*.local
+
+# Generated audit artefacts
+docs/findings.json
+demo/security-tests/results
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor / OS
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Test coverage
+coverage

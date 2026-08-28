@@ -1,0 +1,38 @@
+{
+  "name": "auth-security-skill",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Day 7 Security Lab — a MERN authentication demo with a paired intentionally-vulnerable and skill-hardened implementation, plus two custom Claude Code skills that attack and harden authentication code.",
+  "license": "MIT",
+  "author": "Kashif Raza <https://www.linkedin.com/in/kashif-raza-se>",
+  "workspaces": [
+    "demo/backend",
+    "demo/frontend",
+    "demo/security-tests",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n backend,frontend -c cyan,magenta \"npm run dev -w @auth-lab/backend\" \"npm run dev -w @auth-lab/frontend\"",
+    "dev:backend": "npm run dev -w @auth-lab/backend",
+    "dev:frontend": "npm run dev -w @auth-lab/frontend",
+    "build": "npm run build -w @auth-lab/backend && npm run build -w @auth-lab/frontend && npm run build -w @auth-lab/constant-time-auth",
+    "start": "concurrently -n backend,frontend -c cyan,magenta \"npm run start -w @auth-lab/backend\" \"npm run start -w @auth-lab/frontend\"",
+    "test": "npm run test -w @auth-lab/backend && npm run test -w @auth-lab/constant-time-auth",
+    "audit": "npm run audit -w @auth-lab/security-tests",
+    "generate:secrets": "npm run generate:secrets -w @auth-lab/backend",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "allowScripts": {
+    "esbuild@0.27.7": true,
+    "esbuild@0.28.2": true,
+    "esbuild@0.21.5": true,
+    "mongodb-memory-server@10.4.3": true
+  }
+}

@@ -1,0 +1,24 @@
+# Optional: a real MongoDB for the demo backend.
+# You do NOT need this — with MONGO_URI unset the backend boots an ephemeral
+# in-memory MongoDB automatically. Use this only if you want data to persist
+# between restarts or to inspect it with a Mongo client.
+#
+#   docker compose up -d
+#   # then set MONGO_URI=mongodb://localhost:27017/auth-security-skill in demo/backend/.env
+
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mongo_data:

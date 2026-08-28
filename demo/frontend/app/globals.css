@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+:root {
+  --cyber-black: #050505;
+  --cyber-panel: #0d1117;
+  --cyber-border: #1f2733;
+  --cyber-cyan: #22d3ee;
+  --cyber-red: #ff0033;
+  --cyber-green: #2ea043;
+  --cyber-amber: #eab308;
+}
+
+html,
+body {
+  background: var(--cyber-black);
+  color: #e5e7eb;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+
+.text-glow-cyan {
+  text-shadow: 0 0 8px rgba(34, 211, 238, 0.6);
+}
+.text-glow-red {
+  text-shadow: 0 0 8px rgba(255, 0, 51, 0.6);
+}
+.text-glow-green {
+  text-shadow: 0 0 8px rgba(46, 160, 67, 0.6);
+}
