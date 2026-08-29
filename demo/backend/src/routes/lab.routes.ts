@@ -88,6 +88,27 @@ labRouter.post(
 );
 
 /**
+ * Promote an existing account to admin directly in the database — the way a real
+ * admin-provisioning flow would, bypassing any client-facing endpoint. Used to
+ * test the hardened admin route's *positive* path (a genuine admin gets through).
+ */
+labRouter.post(
+  "/_lab/promote",
+  asyncHandler(async (req, res) => {
+    const email = String(req.body?.email ?? "").trim().toLowerCase();
+    if (!email) {
+      res.status(400).json({ error: "email required" });
+      return;
+    }
+    const r = await User.updateOne(
+      { email },
+      { $set: { role: "admin", permissions: ["users:read", "users:write"] } },
+    );
+    res.json({ ok: true, matched: r.matchedCount, modified: r.modifiedCount });
+  }),
+);
+
+/**
  * Clear only the per-account lockout counters — no data wipe. The timing probe
  * calls this between samples so it measures the credential-verification path
  * itself, not a fast "account locked" rejection. (The bruteforce probe does NOT
