@@ -32,7 +32,9 @@
     "security"
   ],
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^22.10.2",
+    "bcryptjs": "^2.4.3",
     "tinybench": "^3.0.7",
     "tsup": "^8.3.5",
     "tsx": "^4.19.2",
