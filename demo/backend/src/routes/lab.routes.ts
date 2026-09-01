@@ -7,6 +7,7 @@ import { User } from "../models/User";
 import { Session } from "../models/Session";
 import { baselineHash, HASH_PARAMS } from "../services/password.service";
 import { _resetLockouts, LOCKOUT_POLICY } from "../services/lockout.service";
+import { resetRateLimits } from "../middleware/rateLimit";
 import { env, BASELINE_ACCESS_SECRET } from "../config/env";
 
 /**
@@ -83,6 +84,7 @@ labRouter.post(
     await User.deleteMany({});
     await Session.deleteMany({});
     _resetLockouts();
+    resetRateLimits();
     res.json({ ok: true });
   }),
 );
@@ -109,15 +111,17 @@ labRouter.post(
 );
 
 /**
- * Clear only the per-account lockout counters — no data wipe. The timing probe
- * calls this between samples so it measures the credential-verification path
- * itself, not a fast "account locked" rejection. (The bruteforce probe does NOT
- * call it — it wants to observe the lockout.)
+ * Clear the transient throttle state — per-account lockout counters and the IP
+ * rate-limit windows — with no data wipe. The auditor calls this before each
+ * probe so one probe's failed logins never bleed into the next probe's setup,
+ * and the UI calls it (via /_lab/reset) between runs against a long-lived server.
+ * The bruteforce probe still observes the lockout: it triggers it itself from zero.
  */
 labRouter.post(
   "/_lab/reset-lockouts",
   asyncHandler(async (_req, res) => {
     _resetLockouts();
+    resetRateLimits();
     res.json({ ok: true });
   }),
 );

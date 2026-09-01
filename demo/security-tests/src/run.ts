@@ -160,6 +160,11 @@ async function main(): Promise<void> {
       console.log(`\n  ── auditing ${stack} ${"─".repeat(50)}`);
       const ctx = await buildContext(http, stack, args.target, args.samples);
       for (const probe of PROBES) {
+        // Start every probe from a clean lockout + rate-limit state so one
+        // probe's failed logins never bleed into the next probe's setup. The
+        // bruteforce probe still observes the lockout because it triggers it
+        // itself from zero.
+        await http.post("/api/_lab/reset-lockouts").catch(() => undefined);
         const got = await probe(ctx);
         for (const f of got) {
           console.log(`     ${f.verdict.padEnd(13)} ${f.title}`);
