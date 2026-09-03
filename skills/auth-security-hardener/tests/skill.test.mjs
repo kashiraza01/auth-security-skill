@@ -1,83 +1,53 @@
-/**
- * Structural checks for auth-security-hardener/SKILL.md. No dependencies.
- *   node --test skills/auth-security-hardener/tests/
- */
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
-const here = dirname(fileURLToPath(import.meta.url));
-const skill = readFileSync(join(here, "..", "SKILL.md"), "utf8");
+const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+const skill = readFileSync(join(root, "SKILL.md"), "utf8");
 
-test("has YAML frontmatter with name and description", () => {
-  assert.match(skill, /^---\n[\s\S]*?\n---/);
+test("frontmatter: name, version, folded description", () => {
   assert.match(skill, /\nname:\s*auth-security-hardener\b/);
+  assert.match(skill, /\nversion:\s*\d+\.\d+\.\d+/);
   assert.match(skill, /\ndescription:\s*>-/);
 });
 
-test("description promises restraint and no absolute-security claims", () => {
-  const fm = skill.split("---")[1];
-  assert.match(fm, /without rewriting|does NOT.*rewrit|targeted/i);
-  assert.match(fm, /does NOT claim a mitigation is absolute|residual/i);
+test("router: SKILL.md stays lean (< 160 lines)", () => {
+  assert.ok(skill.split("\n").length < 160);
 });
 
-test("has the required sections", () => {
-  for (const heading of [
-    "When to run this",
-    "Objectives",
-    "Workflow",
-    "FIX / RECOMMEND / SKIP",
-    "Checklist",
-    "Special guidance",
-    "Remediation methodology",
-    "Report format",
-    "Worked example",
-    "Close-out",
-  ]) {
-    assert.ok(skill.includes(heading), `missing section: ${heading}`);
-  }
+test("references/ files all exist", () => {
+  for (const f of ["checklist.md", "remediation-patterns.md", "frameworks.md", "report-format.md"])
+    assert.ok(existsSync(join(root, "references", f)), `missing references/${f}`);
 });
 
-test("workflow is a 10-step ordered list", () => {
-  const wf = skill.slice(skill.indexOf("## 3. Workflow"));
-  for (let i = 1; i <= 10; i++) {
-    assert.ok(new RegExp(`\\n${i}\\. \\*\\*`).test(wf), `workflow step ${i} missing`);
-  }
+test("defines FIX / RECOMMEND / SKIP", () => {
+  for (const d of ["FIX", "RECOMMEND", "SKIP"]) assert.ok(skill.includes(d));
 });
 
-test("defines FIX, RECOMMEND and SKIP", () => {
-  for (const d of ["FIX", "RECOMMEND", "SKIP"]) {
-    assert.ok(skill.includes(d), `decision ${d} not defined`);
-  }
+test("keeps authn / claims / authz / enforcement separate", () => {
+  for (const c of [/authentication/i, /token claims/i, /authorization/i, /enforcement/i]) assert.match(skill, c);
 });
 
-test("checklist covers every core control", () => {
-  for (const topic of [
-    /timing|constant.?work/i,
-    /enumerat/i,
-    /rate limit/i,
-    /lockout/i,
-    /argon2|bcrypt cost/i,
-    /rotat/i,
-    /revoc|revoke/i,
-    /tokenVersion/,
-    /CORS/,
-    /helmet/i,
-    /authoriz|authoris/i,
-  ]) {
-    assert.match(skill, topic, `checklist missing topic: ${topic}`);
-  }
+test("rejects the sleep anti-fix; prescribes constant work + dummy hash", () => {
+  assert.match(skill, /wrong fix is `sleep|not.*sleep|removable with samples/i);
+  const rp = readFileSync(join(root, "references", "remediation-patterns.md"), "utf8");
+  assert.match(rp, /dummy hash/i);
+  assert.match(rp, /constant.work/i);
 });
 
-test("explicitly rejects fixed sleeps as the timing fix", () => {
-  assert.match(skill, /not.*fixed.*sleep|sleep\(.*\).*wrong|wrong fix is/i);
-  assert.match(skill, /dummy hash/i);
+test("checklist covers the broadened surface + fix directions", () => {
+  const c = readFileSync(join(root, "references", "checklist.md"), "utf8");
+  for (const t of [/argon2|bcrypt cost/i, /rotat/i, /tokenVersion/, /lockout/i, /OAuth|OIDC/i, /MFA/i, /session fixation/i, /CORS/, /helmet/i])
+    assert.match(c, t, `checklist missing ${t}`);
 });
 
-test("keeps authentication / authorization / claims / enforcement separate", () => {
-  for (const c of ["Authentication", "Token claims", "Authorization", "Enforcement"]) {
-    assert.ok(skill.includes(c), `concept ${c} not called out`);
-  }
+test("frameworks reference names multiple stacks", () => {
+  const f = readFileSync(join(root, "references", "frameworks.md"), "utf8");
+  for (const s of [/Express/, /Django/, /Rails/, /Go/, /Spring/, /NextAuth|Auth\.js/, /Supabase/, /Firebase/]) assert.match(f, s);
+});
+
+test("SKILL.md loads the lessons digest at step 0", () => {
+  assert.match(skill, /lessons-digest/);
 });

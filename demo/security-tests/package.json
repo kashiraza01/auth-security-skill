@@ -5,23 +5,12 @@
   "description": "Standalone adversarial auditor for the auth demo. Probes both /baseline and /hardened, emits docs/findings.json.",
   "license": "MIT",
   "type": "commonjs",
-  "bin": {
-    "auth-lab-audit": "./dist/run.js"
-  },
   "scripts": {
-    "audit": "tsx src/run.ts",
-    "audit:baseline": "tsx src/run.ts --stack=baseline",
-    "audit:hardened": "tsx src/run.ts --stack=hardened",
-    "build": "tsc -p tsconfig.json",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
-  },
-  "dependencies": {
-    "jsonwebtoken": "^9.0.2"
+    "audit": "node run.mjs",
+    "audit:baseline": "node run.mjs --stack=baseline",
+    "audit:hardened": "node run.mjs --stack=hardened"
   },
   "devDependencies": {
-    "@types/jsonwebtoken": "^9.0.7",
-    "@types/node": "^22.10.2",
-    "tsx": "^4.19.2",
-    "typescript": "^5.7.2"
+    "tsx": "^4.19.2"
   }
 }

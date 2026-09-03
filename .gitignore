@@ -41,3 +41,6 @@ pnpm-debug.log*
 
 # Test coverage
 coverage
+
+# loop referee runtime state
+skills/auth-security-loop/loop-report.json

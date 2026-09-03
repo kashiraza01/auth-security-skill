@@ -52,3 +52,11 @@ defence-in-depth. See `SKILL.md` §6 and `packages/constant-time-auth/`.
 - [`examples/hardening-report.md`](./examples/hardening-report.md) — the report shape.
 - [`examples/constant-work-login.md`](./examples/constant-work-login.md) — before/after for
   the timing fix.
+
+## Structure
+
+- `SKILL.md` — the router (workflow, decision criteria, the two fixes people get wrong)
+- `references/` — `checklist.md`, `remediation-patterns.md` (constant-work etc. with code), `frameworks.md` (per-stack idiom), `report-format.md`
+- `examples/` — worked hardening report + the constant-work before/after
+
+Standalone: `cp -r skills/auth-security-hardener ~/.claude/skills/` — self-contained, no repo dependency.

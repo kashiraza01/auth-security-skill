@@ -1,0 +1,19 @@
+{
+  "name": "my-api",
+  "baseUrl": "http://localhost:8080",
+  "endpoints": {
+    "register": "POST /auth/signup",
+    "login": "POST /auth/login",
+    "me": "GET /auth/me",
+    "logout": "POST /auth/logout",
+    "adminOnly": "GET /admin/users",
+    "resetRequest": "POST /auth/forgot-password",
+    "health": "GET /healthz"
+  },
+  "fields": { "identifier": "username", "secret": "password", "accessToken": "token", "role": "role" },
+  "fixtures": {
+    "known": { "username": "seeded-known-user", "password": "the-known-users-real-password" },
+    "absentIdentifier": "definitely-not-a-user-9f3a"
+  },
+  "hooks": {}
+}

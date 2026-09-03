@@ -1,0 +1,20 @@
+{
+  "name": "baseline",
+  "baseUrl": "http://localhost:4000",
+  "endpoints": {
+    "register": "POST /api/baseline/auth/register",
+    "login": "POST /api/baseline/auth/login",
+    "me": "GET /api/baseline/auth/me",
+    "refresh": "POST /api/baseline/auth/refresh",
+    "logout": "POST /api/baseline/auth/logout",
+    "changePassword": "POST /api/baseline/auth/change-password",
+    "adminOnly": "GET /api/baseline/admin/users",
+    "health": "GET /api/health"
+  },
+  "fields": { "identifier": "email", "secret": "password", "accessToken": "accessToken", "role": "role" },
+  "hooks": {
+    "reset": "POST /api/_lab/reset",
+    "resetThrottle": "POST /api/_lab/reset-lockouts",
+    "config": "GET /api/_lab/config"
+  }
+}

@@ -1,78 +1,60 @@
-/**
- * Structural checks for auth-security-breaker/SKILL.md. No dependencies.
- *   node --test skills/auth-security-breaker/tests/
- */
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
-const here = dirname(fileURLToPath(import.meta.url));
-const skill = readFileSync(join(here, "..", "SKILL.md"), "utf8");
+const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+const skill = readFileSync(join(root, "SKILL.md"), "utf8");
 
-test("has YAML frontmatter with name and description", () => {
+test("frontmatter: name, version, folded description", () => {
   assert.match(skill, /^---\n[\s\S]*?\n---/);
   assert.match(skill, /\nname:\s*auth-security-breaker\b/);
+  assert.match(skill, /\nversion:\s*\d+\.\d+\.\d+/);
   assert.match(skill, /\ndescription:\s*>-/);
 });
 
-test("description states what it does, trigger phrases, and a boundary", () => {
-  const fm = skill.split("---")[1];
-  assert.match(fm, /audit/i);
-  assert.match(fm, /authorised|authorized/i);
-  assert.match(fm, /CONFIRMED|SUSPECTED/);
-  assert.match(fm, /does NOT|never/i);
+test("router: SKILL.md stays lean (< 160 lines)", () => {
+  assert.ok(skill.split("\n").length < 160, "SKILL.md should be a lean router; move depth to references/");
 });
 
-test("has the required sections", () => {
-  for (const heading of [
-    "Scope and authorization",
-    "When to run this",
-    "Objectives",
-    "Workflow",
-    "Decision criteria",
-    "Checklist",
-    "Report format",
-    "Testing methodology",
-    "Worked example",
-    "Close-out",
-  ]) {
-    assert.ok(skill.includes(heading), `missing section: ${heading}`);
+test("references/ files all exist", () => {
+  for (const f of ["checklist.md", "timing-methodology.md", "report-format.md", "frameworks.md", "finding.schema.json"])
+    assert.ok(existsSync(join(root, "references", f)), `missing references/${f}`);
+});
+
+test("scripts/ CLI + libs + probes exist", () => {
+  for (const f of ["audit.mjs", "lib/http.mjs", "lib/stats.mjs", "lib/scope-guard.mjs", "lib/profile.mjs", "lib/jwt.mjs", "lib/finding.mjs", "lib/report.mjs"])
+    assert.ok(existsSync(join(root, "scripts", f)), `missing scripts/${f}`);
+  for (const p of ["timing-enumeration", "user-enumeration", "authz-escalation", "token-session", "info-leak", "password-reset", "bruteforce-ratelimit", "lockout-dos"])
+    assert.ok(existsSync(join(root, "scripts", "probes", `${p}.mjs`)), `missing probe ${p}`);
+});
+
+test("profiles: template + demo profiles present and valid JSON", () => {
+  for (const p of ["example-generic.json", "auth-lab-baseline.json", "auth-lab-hardened.json"]) {
+    const j = JSON.parse(readFileSync(join(root, "scripts", "profiles", p), "utf8"));
+    assert.ok(j.endpoints && j.endpoints.login, `${p} needs endpoints.login`);
   }
 });
 
-test("workflow is a 10-step ordered list", () => {
-  const wf = skill.slice(skill.indexOf("## 3. Workflow"));
-  for (let i = 1; i <= 10; i++) {
-    assert.ok(new RegExp(`\\n${i}\\. \\*\\*`).test(wf), `workflow step ${i} missing`);
-  }
+test("finding schema declares the four verdicts + join key", () => {
+  const s = readFileSync(join(root, "references", "finding.schema.json"), "utf8");
+  for (const v of ["CONFIRMED", "SUSPECTED", "INFORMATIONAL", "NOT_DETECTED"]) assert.ok(s.includes(v));
+  assert.ok(/join key/i.test(s), "schema should name id as the join key");
 });
 
-test("defines all four verdicts", () => {
-  for (const v of ["CONFIRMED", "SUSPECTED", "INFORMATIONAL", "NOT_DETECTED"]) {
-    assert.ok(skill.includes(v), `verdict ${v} not defined`);
-  }
+test("checklist covers the broadened surface", () => {
+  const c = readFileSync(join(root, "references", "checklist.md"), "utf8");
+  for (const t of [/timing/i, /enumerat/i, /rate limit/i, /lockout/i, /rotat/i, /OAuth|OIDC/i, /MFA|TOTP/i, /reset/i, /alg confusion|asymmetric/i, /session fixation/i])
+    assert.match(c, t, `checklist missing ${t}`);
 });
 
-test("checklist covers every core weakness class", () => {
-  for (const topic of [
-    /timing/i,
-    /enumerat/i,
-    /rate limit/i,
-    /lockout/i,
-    /hash/i,
-    /rotat/i, // refresh rotation
-    /revocation|revoke/i,
-    /CORS/,
-    /authoriz|authoris/i,
-    /forge|forg/i,
-  ]) {
-    assert.match(skill, topic, `checklist missing topic: ${topic}`);
-  }
+test("SKILL.md keeps the scope gate and the four verdicts", () => {
+  assert.match(skill, /scope/i);
+  for (const v of ["CONFIRMED", "SUSPECTED", "INFORMATIONAL", "NOT_DETECTED"]) assert.ok(skill.includes(v));
+  assert.match(skill, /never call.*timing.*exploitable|not.*exploitab/i);
 });
 
-test("does not overclaim on timing", () => {
-  // must contain the "not exploitable by itself" discipline somewhere
-  assert.match(skill, /never claims a timing difference is "exploitable"|not.*exploitab/i);
+test("SKILL.md loads the lessons digest at step 0", () => {
+  assert.match(skill, /lessons-digest/);
 });

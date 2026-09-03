@@ -114,7 +114,7 @@ export const CHECKS: Check[] = [
     fix: "Generic body in production; detail logged server-side with a correlation id.",
   },
   {
-    findingId: "nosql-operator-in-email",
+    findingId: "nosql-operator-in-identifier",
     title: "Query operator in the email field",
     severity: "high",
     blurb: '{"email":{"$ne":null}} reaches the database query.',

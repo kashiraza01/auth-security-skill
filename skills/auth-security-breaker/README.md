@@ -19,6 +19,17 @@ cp -r skills/auth-security-breaker .claude/skills/
 Then invoke it by asking for what it does — "audit the auth on localhost:4000", "test my
 login for user enumeration", "act as the breaker against the demo".
 
+## Quickstart (standalone)
+
+```bash
+cp -r skills/auth-security-breaker ~/.claude/skills/          # install
+cd ~/.claude/skills/auth-security-breaker
+cp scripts/profiles/example-generic.json scripts/profiles/mine.json   # describe your API
+node scripts/audit.mjs --profile=scripts/profiles/mine.json  # audit — zero npm install needed
+```
+
+Node 18+ only. No dependencies to install — the CLI uses built-in `fetch` and `node:crypto`.
+
 ## What it does
 
 1. Confirms the target is in scope (loopback / explicit allowlist / not production).
@@ -43,12 +54,12 @@ format.
 
 ## Reference implementation
 
-`demo/security-tests/` in this repo is this skill's workflow written as code — the harness
-(`stats.ts`, `scope-guard.ts`), the probes, and the report writer. Use it directly
-(`npm run audit`) or as a model for a probe in another language.
+The runnable implementation ships **inside this skill** at `scripts/` (`audit.mjs`, `lib/`,
+`probes/`, `profiles/`) — zero dependencies. In this repo `demo/security-tests/` is a thin
+wrapper that spawns the lab backend and calls the same `runAudit()`; `npm run audit` uses it.
 
 ## Examples
 
 See [`examples/sample-audit.md`](./examples/sample-audit.md) for a full report shape and
-[`examples/timing-probe.md`](./examples/timing-probe.md) for how the timing analysis is done
+[`references/timing-methodology.md`](./references/timing-methodology.md) for how the timing analysis is done
 and written up.

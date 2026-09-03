@@ -1,0 +1,21 @@
+{
+  "name": "hardened",
+  "baseUrl": "http://localhost:4000",
+  "endpoints": {
+    "register": "POST /api/hardened/auth/register",
+    "login": "POST /api/hardened/auth/login",
+    "me": "GET /api/hardened/auth/me",
+    "refresh": "POST /api/hardened/auth/refresh",
+    "logout": "POST /api/hardened/auth/logout",
+    "logoutAll": "POST /api/hardened/auth/logout-all",
+    "changePassword": "POST /api/hardened/auth/change-password",
+    "adminOnly": "GET /api/hardened/admin/users",
+    "health": "GET /api/health"
+  },
+  "fields": { "identifier": "email", "secret": "password", "accessToken": "accessToken", "role": "role" },
+  "hooks": {
+    "reset": "POST /api/_lab/reset",
+    "resetThrottle": "POST /api/_lab/reset-lockouts",
+    "config": "GET /api/_lab/config"
+  }
+}
