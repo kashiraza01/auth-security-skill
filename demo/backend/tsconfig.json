@@ -5,7 +5,12 @@
     "moduleResolution": "node",
     "lib": ["ES2022"],
     "outDir": "dist",
-    "rootDir": ".",
+    // rootDir is src (not "."), so the build emits dist/server.js — matching
+    // package.json main/start — and keeps the compiled directory depth equal to
+    // the source depth, which the __dirname-relative REPO_ROOT in
+    // src/routes/lab.routes.ts depends on. scripts/ is dev-only (run via tsx)
+    // and is type-checked by tsconfig.typecheck.json instead.
+    "rootDir": "src",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -15,6 +20,6 @@
     "sourceMap": true,
     "types": ["node", "jest"]
   },
-  "include": ["src/**/*.ts", "scripts/**/*.ts"],
-  "exclude": ["node_modules", "dist", "src/**/*.test.ts"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "src/**/*.test.ts", "src/__tests__/**"]
 }

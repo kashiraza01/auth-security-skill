@@ -1,0 +1,11 @@
+{
+  // Type-checks everything the build excludes — tests and the dev scripts —
+  // without emitting. `npm run typecheck` uses this; `npm run build` does not.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "rootDir": "."
+  },
+  "include": ["src/**/*.ts", "scripts/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}
