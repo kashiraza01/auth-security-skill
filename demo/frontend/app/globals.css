@@ -1,28 +1,121 @@
 @import "tailwindcss";
 
+/* ============================================================================
+   AUTH SECURITY HUD — design system
+   One file drives the whole look. Everything is a CSS var so the palette is
+   swappable, and every motion is opt-out via prefers-reduced-motion.
+   ============================================================================ */
 :root {
-  --cyber-black: #050505;
-  --cyber-panel: #0d1117;
-  --cyber-border: #1f2733;
-  --cyber-cyan: #22d3ee;
-  --cyber-red: #ff0033;
-  --cyber-green: #2ea043;
-  --cyber-amber: #eab308;
+  --bg: #04060a;
+  --bg-panel: #0a0f16;
+  --bg-panel-2: #0d141d;
+  --border: #16202c;
+  --border-bright: #21323f;
+
+  --cyan: #22d3ee;
+  --cyan-dim: #0e7490;
+  --magenta: #f0f;
+  --red: #ff2d55;
+  --amber: #f5b301;
+  --green: #22e06b;
+  --violet: #7c5cff;
+
+  --text: #d7e3ea;
+  --text-dim: #6d8497;
+  --text-faint: #3f5261;
+
+  --grid: rgba(34, 211, 238, 0.06);
+  --scan: rgba(0, 0, 0, 0.28);
+  --glow-cyan: 0 0 10px rgba(34, 211, 238, 0.55);
+  --glow-red: 0 0 10px rgba(255, 45, 85, 0.55);
+  --glow-green: 0 0 10px rgba(34, 224, 107, 0.5);
+
+  --font-display: var(--font-orbitron), "Segoe UI", system-ui, sans-serif;
+  --font-mono: var(--font-mono-hud), ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace;
 }
 
-html,
-body {
-  background: var(--cyber-black);
-  color: #e5e7eb;
-  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  -webkit-font-smoothing: antialiased;
 }
 
-.text-glow-cyan {
-  text-shadow: 0 0 8px rgba(34, 211, 238, 0.6);
+/* ---- neon perspective grid (GPU-cheap: transform only) ---- */
+.hud-grid {
+  position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+  background:
+    linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 44px 44px,
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 44px 44px;
+  mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, #000 40%, transparent 100%);
 }
-.text-glow-red {
-  text-shadow: 0 0 8px rgba(255, 0, 51, 0.6);
+.hud-grid::after {
+  content: ""; position: absolute; inset: -50% -50% -80% -50%;
+  background:
+    linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 60px 60px,
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 60px 60px;
+  transform: perspective(420px) rotateX(66deg) translateY(0);
+  animation: grid-run 9s linear infinite;
+  opacity: 0.7;
 }
-.text-glow-green {
-  text-shadow: 0 0 8px rgba(46, 160, 67, 0.6);
+@keyframes grid-run { from { transform: perspective(420px) rotateX(66deg) translateY(0); } to { transform: perspective(420px) rotateX(66deg) translateY(60px); } }
+
+/* ---- CRT overlay: scanlines + vignette + flicker ---- */
+.crt { position: fixed; inset: 0; z-index: 60; pointer-events: none; }
+.crt::before {
+  content: ""; position: absolute; inset: 0;
+  background: repeating-linear-gradient(to bottom, transparent 0, transparent 2px, var(--scan) 3px, transparent 4px);
+  mix-blend-mode: multiply; opacity: 0.5;
+}
+.crt::after {
+  content: ""; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.5) 100%);
+  animation: crt-flicker 5s steps(60) infinite;
+}
+@keyframes crt-flicker { 0%,97%,100% { opacity: 1; } 98% { opacity: 0.82; } 99% { opacity: 0.94; } }
+
+/* ---- typography helpers ---- */
+.display { font-family: var(--font-display); letter-spacing: 0.14em; text-transform: uppercase; }
+.text-glow-cyan { color: var(--cyan); text-shadow: var(--glow-cyan); }
+.text-glow-red { color: var(--red); text-shadow: var(--glow-red); }
+.text-glow-green { color: var(--green); text-shadow: var(--glow-green); }
+.hairline { letter-spacing: 0.3em; text-transform: uppercase; font-size: 10px; color: var(--text-dim); }
+
+/* ---- panel chrome ---- */
+.panel { background: var(--bg-panel); border: 1px solid var(--border); }
+.panel-b { border-bottom: 1px solid var(--border); }
+.corner { position: relative; }
+.corner::before, .corner::after {
+  content: ""; position: absolute; width: 10px; height: 10px; border-color: var(--cyan-dim); }
+.corner::before { top: -1px; left: -1px; border-top: 1px solid; border-left: 1px solid; }
+.corner::after { bottom: -1px; right: -1px; border-bottom: 1px solid; border-right: 1px solid; }
+
+/* ---- glitch (RGB split) for headings/panels on change ---- */
+.glitch { position: relative; }
+.glitch.is-on { animation: glitch-shift 0.42s steps(2) 1; }
+.glitch.is-on::before, .glitch.is-on::after {
+  content: attr(data-text); position: absolute; inset: 0; clip-path: inset(0);
+}
+.glitch.is-on::before { color: var(--red); transform: translate(-2px, 0); mix-blend-mode: screen; animation: glitch-a 0.42s steps(2) 1; }
+.glitch.is-on::after { color: var(--cyan); transform: translate(2px, 0); mix-blend-mode: screen; animation: glitch-b 0.42s steps(2) 1; }
+@keyframes glitch-shift { 0%{transform:translate(0)} 25%{transform:translate(-1px,1px)} 50%{transform:translate(1px,-1px)} 100%{transform:translate(0)} }
+@keyframes glitch-a { 0%{clip-path:inset(0 0 82% 0)} 50%{clip-path:inset(60% 0 8% 0)} 100%{clip-path:inset(0 0 82% 0)} }
+@keyframes glitch-b { 0%{clip-path:inset(70% 0 5% 0)} 50%{clip-path:inset(10% 0 70% 0)} 100%{clip-path:inset(70% 0 5% 0)} }
+
+/* ---- scrollbars ---- */
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-track { background: var(--bg); }
+*::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 0; }
+*::-webkit-scrollbar-thumb:hover { background: var(--cyan-dim); }
+
+/* ---- blink cursor ---- */
+.cursor-blink::after { content: "▌"; color: var(--cyan); animation: blink 1s steps(2) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ---- respect reduced motion: kill every animation, keep the layout ---- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .hud-grid::after { transform: perspective(420px) rotateX(66deg); }
 }
