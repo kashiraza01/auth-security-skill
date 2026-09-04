@@ -2,7 +2,7 @@
   "name": "auth-security-skill",
   "version": "0.1.0",
   "private": true,
-  "description": "Day 7 Security Lab \u2014 a MERN authentication demo with a paired intentionally-vulnerable and skill-hardened implementation, plus two custom Claude Code skills that attack and harden authentication code.",
+  "description": "Day 7 Security Lab — a MERN authentication demo with a paired intentionally-vulnerable and skill-hardened implementation, plus two custom Claude Code skills that attack and harden authentication code.",
   "license": "MIT",
   "author": "Kashif Raza <https://www.linkedin.com/in/kashif-raza-se>",
   "workspaces": [

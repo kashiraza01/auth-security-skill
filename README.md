@@ -216,17 +216,35 @@ applying a template. FIX items are implemented in place, smallest change that ke
 contract, one concern per change, a security test for each. Nothing is described as "now
 secure"; every fix states its residual risk. → [`skills/auth-security-hardener/SKILL.md`](skills/auth-security-hardener/SKILL.md)
 
-Install into your own project:
+### Install into your own project
+
+Each skill folder is self-contained (its own `scripts/`, `references/`, and a seeded lessons
+ledger) — you can install one on its own, or all three. Node 20+; no `npm install`.
 
 ```bash
+# just the auditor (read-only, safest to start with):
 cp -r skills/auth-security-breaker  ~/.claude/skills/
+
+# add the remediator, and the loop (which needs both skills + its two subagents):
 cp -r skills/auth-security-hardener ~/.claude/skills/
-cp -r skills/auth-security-loop     ~/.claude/skills/     # the break->fix->re-break loop
-cp -r .claude/agents/auth-*.md      ~/.claude/agents/     # the loop's two subagents
+cp -r skills/auth-security-loop     ~/.claude/skills/
+cp -r .claude/agents/auth-*.md      ~/.claude/agents/
 ```
 
-Point the breaker at any API by copying `scripts/profiles/example-generic.json` and filling in
-your endpoints — `node scripts/audit.mjs --profile=mine.json`. Zero `npm install`.
+Then point the breaker at any API — copy `scripts/profiles/example-generic.json`, fill in your
+endpoints, and run `node scripts/audit.mjs --profile=mine.json` (writes `findings.json` in the
+current directory).
+
+**What each skill can touch — know this before you hand it your repo:**
+
+| Skill | What it does to your machine |
+|---|---|
+| `auth-security-breaker` | **Read-only-ish.** Reads your code; makes low-volume HTTP requests to a **localhost / allowlisted** target only (refuses production). No file edits. |
+| `auth-security-hardener` | **Edits code.** Modifies your auth source and adds tests to close findings. Review its diff like any PR. |
+| `auth-security-loop` | Runs the two above in a loop — so it both edits code and runs your server / shell locally. |
+
+These are exercised against the bundled demo. Against a real third-party stack they'll attempt
+the same methodology, but treat the first run as an assessment to review, not a rubber stamp.
 
 ---
 

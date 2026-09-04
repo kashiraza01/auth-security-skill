@@ -32,7 +32,7 @@ you are on needs it.
 | How the timing statistics work + how to write them up | `references/timing-methodology.md` |
 | The audit-report + findings-JSON format | `references/report-format.md` + `references/finding.schema.json` |
 | Per-framework auth boundaries + idiomatic anti-patterns | `references/frameworks.md` |
-| What past runs learned (do this / not that) | run `../auth-security-loop/scripts/lessons-digest.mjs` |
+| What past runs learned (do this / not that) | run `scripts/lessons-digest.mjs` |
 
 ## 0. Scope and authorization — the gate
 
@@ -53,7 +53,7 @@ or as the breaker step inside `auth-security-loop`.
 
 ## 2. Workflow — ten steps
 
-0. **Load the lessons digest** (`../auth-security-loop/scripts/lessons-digest.mjs`). Start from
+0. **Load the lessons digest** (`scripts/lessons-digest.mjs`). Start from
    what previous runs learned — the DO / DON'T rules are there so mistakes are not repeated.
 1. **Confirm scope** (§0). Record the caps you will use (sample counts, delay, max attempts).
 2. **Describe the target as a profile.** Copy `scripts/profiles/example-generic.json`, fill in

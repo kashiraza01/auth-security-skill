@@ -30,8 +30,8 @@ This file is a router. Depth lives in `references/`.
 | Remediation patterns (constant-work, authz split, rotation, …) with code | `references/remediation-patterns.md` |
 | The idiomatic fix per framework | `references/frameworks.md` |
 | The hardening-report format | `references/report-format.md` |
-| The shared findings contract | `../auth-security-breaker/references/finding.schema.json` |
-| What past runs learned | run `../auth-security-loop/scripts/lessons-digest.mjs` |
+| The shared findings contract | `references/finding.schema.json` |
+| What past runs learned | run `scripts/lessons-digest.mjs` |
 
 ## 1. When to run this
 
@@ -42,7 +42,7 @@ fundamentally wrong design is a RECOMMEND with a migration sketch, not a silent 
 
 ## 2. Workflow — ten steps
 
-0. **Load the lessons digest** (`../auth-security-loop/scripts/lessons-digest.mjs`). Apply the
+0. **Load the lessons digest** (`scripts/lessons-digest.mjs`). Apply the
    accumulated DO / DON'T rules — e.g. "DON'T fix login timing with a sleep".
 1. **Locate the boundaries** — where authentication happens (credential check, token issue/verify)
    and where authorization happens (role/permission/ownership checks). List files + functions.

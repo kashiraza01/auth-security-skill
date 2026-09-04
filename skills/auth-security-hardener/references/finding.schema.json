@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/kashiraza01/auth-security-skill/finding.schema.json",
+  "title": "Auth security finding + audit report",
+  "description": "The contract shared by auth-security-breaker (emits), auth-security-hardener (consumes), and auth-security-loop (diffs across iterations). Machine-readable so 'fixed / still-present / regression' is computed, not prose-matched.",
+  "type": "object",
+  "required": ["ranAt", "target", "stacksTested", "environment", "findings"],
+  "properties": {
+    "ranAt": { "type": "string", "format": "date-time" },
+    "durationMs": { "type": "number" },
+    "target": { "type": "string" },
+    "iteration": { "type": "integer", "description": "loop iteration that produced this report; 0 = baseline" },
+    "stacksTested": { "type": "array", "items": { "type": "string" } },
+    "environment": {
+      "type": "object",
+      "required": ["node", "platform"],
+      "properties": {
+        "node": { "type": "string" },
+        "platform": { "type": "string" },
+        "note": { "type": "string" }
+      }
+    },
+    "findings": { "type": "array", "items": { "$ref": "#/definitions/finding" } }
+  },
+  "definitions": {
+    "finding": {
+      "type": "object",
+      "required": ["id", "title", "stack", "verdict", "severity", "summary", "evidence", "remediation", "limitations", "probe"],
+      "properties": {
+        "id": { "type": "string", "description": "stable slug, e.g. timing-user-enumeration. The join key across iterations." },
+        "title": { "type": "string" },
+        "stack": { "type": "string", "description": "which target profile this finding is about" },
+        "verdict": { "enum": ["CONFIRMED", "SUSPECTED", "INFORMATIONAL", "NOT_DETECTED"] },
+        "severity": { "enum": ["critical", "high", "medium", "low", "info"] },
+        "summary": { "type": "string" },
+        "evidence": { "type": "object", "description": "numbers, not adjectives; timing findings carry raw sample arrays" },
+        "remediation": { "type": "string" },
+        "limitations": { "type": "string" },
+        "target": { "type": "string" },
+        "probe": { "type": "string" },
+        "ranAt": { "type": "string" },
+        "cwe": { "type": "string", "description": "optional CWE id, e.g. CWE-307" }
+      }
+    }
+  }
+}

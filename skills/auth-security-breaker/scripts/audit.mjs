@@ -42,7 +42,7 @@ function parseArgs(argv) {
   return {
     profiles: profiles.length ? profiles : [get("profile", path.join(__dirname, "profiles/auth-lab-baseline.json"))],
     samples: Number(get("samples", "60")),
-    out: get("out", path.resolve(__dirname, "../../..", "docs/findings.json")),
+    out: get("out", path.resolve(process.cwd(), "findings.json")),
     iteration: Number(get("iteration", "0")),
   };
 }
