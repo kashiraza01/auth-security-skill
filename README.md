@@ -8,8 +8,7 @@ There's a runnable MERN demo so you can watch it happen instead of taking my wor
 [![Tests](https://img.shields.io/badge/tests-69%20passing-brightgreen)](#the-tests)
 [![Skills](https://img.shields.io/badge/probe%20CLI-zero%20dependencies-8957e5)](skills/auth-security-breaker/scripts)
 
-🌐 **Live demo:** `[DEMO URL]`
-📦 **Repository:** `[GITHUB REPO URL]`
+**Repository:** `https://github.com/kashiraza01/auth-security-skill`
 
 ![The /lab comparison view: baseline auth on the left, hardened on the right, with the login-timing distribution and effect size measured live](docs/media/lab-overview.png)
 
