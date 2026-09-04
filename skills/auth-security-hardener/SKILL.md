@@ -5,8 +5,9 @@ description: >-
   Review an authentication implementation against a defined checklist, explain why each issue
   matters, and implement targeted fixes without rewriting the architecture. Use when asked to
   "harden the auth", "fix the login security", "make authentication timing-safe", "review this
-  auth code for security", "act on the audit findings", "secure the JWT / session handling", or
-  when given an auth-security-breaker findings.json to remediate. Inspects the real architecture
+  auth code for security", "act on the audit findings", "secure the JWT / session handling",
+  "stop my login leaking which accounts exist", "make logout actually invalidate the token", "fix user
+  enumeration", or when given an auth-security-breaker findings.json to remediate. Inspects the real architecture
   first, decides FIX / RECOMMEND / SKIP per item, preserves behaviour and endpoint contracts,
   adds or updates a security test for every fix, and re-reviews. It does NOT invent
   vulnerabilities, does NOT swap frameworks or restructure modules, and does NOT claim a

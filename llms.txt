@@ -1,0 +1,57 @@
+# Auth Security Skills Lab
+
+> Three Claude Code skills for authentication security, plus a runnable MERN demo that proves they work. `auth-security-breaker` audits an auth implementation and produces evidence-backed findings; `auth-security-hardener` fixes what it found, one test per fix; `auth-security-loop` runs the two against each other until the audit comes back clean, with a referee script deciding convergence. All three are scoped to localhost or an explicitly authorised target and refuse production. Node 20+, MIT licensed.
+
+Key facts an agent should not have to infer:
+
+- The skills live in `skills/`. Each folder is self-contained and needs no `npm install`. The probe CLI uses Node 18+ built-ins only (`fetch`, `node:crypto`).
+- Install with `./scripts/install-skills.sh` (add `--project` for `./.claude` instead of `~/.claude`).
+- The demo backend serves two auth stacks from one Express app: `/api/baseline/auth/*` is intentionally vulnerable, `/api/hardened/auth/*` is the fixed pair. Never copy `baseline.*` into real code.
+- Verified result: 12 CONFIRMED findings on baseline, 0 CONFIRMED on hardened, from identical probes. Login timing gap 19.2 ms → 0.13 ms.
+- Tests: 35 backend (jest + supertest), 10 package (vitest), 24 skill structural. `npm test` runs all three.
+- Probes target a JSON profile, never a hardcoded path, so they work against any HTTP auth API.
+
+Questions this repository answers directly, with the file that answers each:
+
+- "How do I test my login for user enumeration?" → [SKILL.md](SKILL.md), [skills/auth-security-breaker/SKILL.md](skills/auth-security-breaker/SKILL.md)
+- "Is my login vulnerable to a timing attack, and how would I measure it?" → [skills/auth-security-breaker/references/timing-methodology.md](skills/auth-security-breaker/references/timing-methodology.md)
+- "Why is my login slower for real accounts than for nonexistent ones?" → [docs/faq.md](docs/faq.md), [docs/hardening.md](docs/hardening.md)
+- "How do I make login timing constant without a sleep()?" → [packages/constant-time-auth/README.md](packages/constant-time-auth/README.md)
+- "Should authorization read the role from the JWT?" → [docs/findings.md](docs/findings.md), [skills/auth-security-hardener/references/remediation-patterns.md](skills/auth-security-hardener/references/remediation-patterns.md)
+- "Does logout invalidate a JWT, and how do I revoke tokens after a password change?" → [docs/hardening.md](docs/hardening.md)
+- "How do I install and use a Claude Code skill for security review?" → [SKILL.md](SKILL.md), [scripts/install-skills.sh](scripts/install-skills.sh)
+- "Can an AI agent audit and then fix my authentication automatically?" → [skills/auth-security-loop/SKILL.md](skills/auth-security-loop/SKILL.md)
+- "Is it safe to run an AI security tool against my own code?" → [docs/faq.md](docs/faq.md), [CONTRIBUTING.md](CONTRIBUTING.md)
+
+## Start here
+
+- [SKILL.md](SKILL.md): the entry point for the skillset. Which of the three skills to run, in what order, what each one is allowed to touch, and how the loop engine's referee works.
+- [README.md](README.md): what the project is, why it exists, the findings table, and quick start.
+- [docs/faq.md](docs/faq.md): question-shaped answers about the underlying problems, not just this repo. What user enumeration is, why a login answers faster for unknown emails, why a `sleep()` doesn't fix timing, whether a role belongs in a JWT, whether logout invalidates a token, what each skill touches, and what the tooling will not find.
+
+## The skills
+
+- [skills/auth-security-breaker/SKILL.md](skills/auth-security-breaker/SKILL.md): the auditor. Ten-step workflow, the four verdicts (CONFIRMED / SUSPECTED / INFORMATIONAL / NOT_DETECTED), and the probe CLI.
+- [skills/auth-security-hardener/SKILL.md](skills/auth-security-hardener/SKILL.md): the remediator. FIX / RECOMMEND / SKIP per item, smallest change that preserves the contract, a test per fix.
+- [skills/auth-security-loop/SKILL.md](skills/auth-security-loop/SKILL.md): the loop engine. Break, fix, re-break, with CONVERGED / REGRESSION / STALLED / CAP decided by `scripts/loop.mjs`.
+- [skills/auth-security-breaker/references/checklist.md](skills/auth-security-breaker/references/checklist.md): every weakness class the auditor probes for, and the observable each one predicts.
+- [skills/auth-security-breaker/references/timing-methodology.md](skills/auth-security-breaker/references/timing-methodology.md): how the timing statistics are computed and how to write them up honestly.
+- [skills/auth-security-hardener/references/remediation-patterns.md](skills/auth-security-hardener/references/remediation-patterns.md): the fix for each weakness class, with code.
+
+## Evidence and documentation
+
+- [docs/findings.md](docs/findings.md): all 12 baseline findings with evidence, impact, and fix direction.
+- [docs/hardening.md](docs/hardening.md): what each fix changed and its residual risk.
+- [docs/threat-model.md](docs/threat-model.md): what the hardened stack defends against and what it explicitly does not cover.
+- [docs/architecture.md](docs/architecture.md): component diagram, data model, and the auditor's internals.
+- [docs/security-testing.md](docs/security-testing.md): how the regression suite asserts security properties, including the statistical timing assertions.
+
+## Contributing and scope
+
+- [CONTRIBUTING.md](CONTRIBUTING.md): setup, running tests, adding a new security check end to end, and the responsible-testing rules that apply to anything merged.
+- [LICENSE](LICENSE): MIT.
+
+## Optional
+
+- [docs/npm-evaluation.md](docs/npm-evaluation.md): why `packages/constant-time-auth` is not published to npm yet.
+- [docs/repo-metadata.md](docs/repo-metadata.md): GitHub description, topics, and settings.

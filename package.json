@@ -2,7 +2,7 @@
   "name": "auth-security-skill",
   "version": "0.1.0",
   "private": true,
-  "description": "Day 7 Security Lab — a MERN authentication demo with a paired intentionally-vulnerable and skill-hardened implementation, plus two custom Claude Code skills that attack and harden authentication code.",
+  "description": "Two Claude Code skills for authentication security — one audits an auth implementation for user enumeration, timing attacks, token forgery and broken authorization; the other hardens it. Includes a runnable MERN (Node.js/Express/React) demo with paired vulnerable and hardened auth stacks.",
   "license": "MIT",
   "author": "Kashif Raza <https://www.linkedin.com/in/kashif-raza-se>",
   "workspaces": [
@@ -36,5 +36,35 @@
     "esbuild@0.28.2": true,
     "esbuild@0.21.5": true,
     "mongodb-memory-server@10.4.3": true
-  }
+  },
+  "keywords": [
+    "claude-code",
+    "claude-code-skills",
+    "ai-coding-agent",
+    "authentication",
+    "authentication-security",
+    "application-security",
+    "appsec",
+    "security-testing",
+    "secure-coding",
+    "user-enumeration",
+    "timing-attack",
+    "jwt-security",
+    "authorization",
+    "mern",
+    "nodejs",
+    "express",
+    "react",
+    "nextjs",
+    "mongodb",
+    "owasp"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kashiraza01/auth-security-skill.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kashiraza01/auth-security-skill/issues"
+  },
+  "homepage": "https://github.com/kashiraza01/auth-security-skill#readme"
 }

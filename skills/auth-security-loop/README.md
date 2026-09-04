@@ -9,6 +9,7 @@ written back to a DO/DON'T ledger both skills read next time, so the skills comp
 ## Install (standalone)
 
 ```bash
+# from a clone of the repo:
 cp -r skills/auth-security-loop     ~/.claude/skills/
 cp -r skills/auth-security-breaker  ~/.claude/skills/
 cp -r skills/auth-security-hardener ~/.claude/skills/

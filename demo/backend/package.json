@@ -2,7 +2,7 @@
   "name": "@auth-lab/backend",
   "version": "0.1.0",
   "private": true,
-  "description": "MERN auth demo — paired baseline (vulnerable) and hardened auth APIs in one Express app.",
+  "description": "Auth Security Skills Lab demo API — one Express + TypeScript app serving a deliberately vulnerable auth stack and a hardened one against the same MongoDB, for side-by-side authentication security comparison.",
   "license": "MIT",
   "type": "commonjs",
   "main": "dist/server.js",
@@ -42,5 +42,15 @@
     "ts-jest": "^29.2.5",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"
-  }
+  },
+  "keywords": [
+    "authentication",
+    "express",
+    "typescript",
+    "mongodb",
+    "security-lab",
+    "jwt",
+    "argon2",
+    "user-enumeration"
+  ]
 }

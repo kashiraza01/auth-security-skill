@@ -6,7 +6,8 @@ description: >-
   and a defender subagent against the same auth codebase — break, fix, re-break — and stops only
   when the break no longer succeeds. Use when asked to "harden this auth until it's clean", "run
   the break-fix loop", "self-improve the auth security", "keep attacking and fixing until it
-  holds", or to remediate an auth implementation end to end without hand-holding each round. A
+  holds", "can an agent audit and fix my authentication on its own", or to remediate an auth
+  implementation end to end without hand-holding each round. A
   deterministic referee script decides convergence, regression, and stall — so "it converged" is
   computed, not claimed. Every state change is written back to a DO/DON'T lessons ledger the
   breaker and hardener load on their next run, so the skills compound. It does NOT weaken probes
@@ -59,6 +60,34 @@ repeat (cap N, default 4):
    the verdict + exit code. Do not declare "converged" from prose.
 5. **Every state change writes a lesson.** `record-lesson.mjs` (validated, no duplicates). Skipping
    this defeats the point — the compounding is the feature.
+
+## Running it (any project)
+
+The loop needs three things from the project it is pointed at: a way to start the target, a
+breaker **target profile** describing the auth endpoints, and a findings file the referee can
+read. Nothing else is assumed.
+
+```bash
+# 1. describe the target once (copy the breaker's template and fill it in)
+cp ~/.claude/skills/auth-security-breaker/scripts/profiles/example-generic.json ./auth-profile.json
+
+# 2. iteration 0 — baseline audit
+node ~/.claude/skills/auth-security-breaker/scripts/audit.mjs --profile=./auth-profile.json
+node ~/.claude/skills/auth-security-loop/scripts/loop.mjs advance \
+  --findings=./findings.json --stack=main --max=4
+
+# 3. after each hardener change, re-audit with the SAME profile and advance again
+node ~/.claude/skills/auth-security-breaker/scripts/audit.mjs --profile=./auth-profile.json
+node ~/.claude/skills/auth-security-loop/scripts/loop.mjs advance --findings=./findings.json --stack=main
+
+# 4. record a lesson for every finding whose state changed
+node ~/.claude/skills/auth-security-loop/scripts/record-lesson.mjs --finding=<id> --iteration=<n> \
+  --transition="still-present -> fixed" --worked="..." --do="..." --dont="..."
+```
+
+`--stack` is just a label the referee uses to keep iterations of the same target together; use
+any stable string. `loop.mjs status` shows where the loop is, and state lives in
+`loop-report.json` in the working directory.
 
 ## Running it (this repo)
 

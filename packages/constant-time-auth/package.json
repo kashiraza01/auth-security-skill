@@ -2,7 +2,7 @@
   "name": "@auth-lab/constant-time-auth",
   "version": "0.1.0",
   "private": true,
-  "description": "Equalise the computational work of a credential check whether or not the account exists — a real mitigation for login timing/user-enumeration side channels. Not a random-sleep timer.",
+  "description": "Constant-work login verification for Node.js — always performs one Argon2 verification, including when the account does not exist, to remove the timing signal that reveals whether an email is registered.",
   "license": "MIT",
   "type": "commonjs",
   "main": "./dist/index.js",
@@ -15,7 +15,10 @@
       "require": "./dist/index.js"
     }
   },
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts --clean",
     "test": "vitest run",
@@ -24,11 +27,13 @@
     "typecheck": "tsc --noEmit"
   },
   "keywords": [
-    "authentication",
     "timing-attack",
     "user-enumeration",
-    "side-channel",
+    "authentication",
+    "argon2",
     "constant-time",
+    "login",
+    "nodejs",
     "security"
   ],
   "devDependencies": {

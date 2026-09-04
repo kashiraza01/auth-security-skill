@@ -10,6 +10,7 @@ report here → run breaker again.
 ## Install
 
 ```bash
+# from a clone of the repo:
 cp -r skills/auth-security-hardener ~/.claude/skills/
 # or project-scoped:
 cp -r skills/auth-security-hardener .claude/skills/

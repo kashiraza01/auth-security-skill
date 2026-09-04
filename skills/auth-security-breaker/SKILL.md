@@ -6,7 +6,8 @@ description: >-
   authorised target and produce reproducible, evidence-backed findings. Use when asked to
   "audit auth", "attack the login", "test for user enumeration", "check the auth for
   vulnerabilities", "pen-test the authentication", "is my login timing-safe", "can you break
-  this auth". Maps the attack surface, reads the code, runs a zero-dependency probe CLI against
+  this auth", "does my login leak which emails are registered", "can someone forge an admin
+  token", "review my authentication before it ships". Maps the attack surface, reads the code, runs a zero-dependency probe CLI against
   any auth API described by a target profile, and classifies every result CONFIRMED / SUSPECTED
   / INFORMATIONAL / NOT_DETECTED with the numbers attached. It does NOT harden code (hand that
   to auth-security-hardener), never runs against a target that is not in scope, and never calls

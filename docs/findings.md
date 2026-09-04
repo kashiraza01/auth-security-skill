@@ -4,6 +4,10 @@ Produced by `npm run audit` (`demo/security-tests/`) against `demo/backend`'s
 `/api/baseline/auth/*` on Node v24.20.0 / win32 x64, local HTTP. Regenerate any time — the
 JSON form is `docs/findings.json` (git-ignored; contains machine-specific paths in evidence).
 
+Reproduced 2026-09-04 on Node v22.22.0 / darwin arm64: same 12 CONFIRMED on baseline, same 0
+on hardened. Absolute timings differ by machine (the baseline median delta was 19.2 ms there
+against 19.9 ms here); the verdicts and effect sizes do not.
+
 **12 CONFIRMED on the baseline stack. 0 CONFIRMED on the hardened stack.** Every baseline
 CONFIRMED returns NOT_DETECTED when the same probe runs against `/api/hardened/auth/*`.
 

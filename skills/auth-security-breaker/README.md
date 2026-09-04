@@ -11,6 +11,7 @@ report to hardener → run breaker again to confirm.
 Copy the folder into your skills directory:
 
 ```bash
+# from a clone of the repo:
 cp -r skills/auth-security-breaker ~/.claude/skills/
 # or, project-scoped:
 cp -r skills/auth-security-breaker .claude/skills/

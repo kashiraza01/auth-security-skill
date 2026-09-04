@@ -2,7 +2,7 @@
   "name": "@auth-lab/frontend",
   "version": "0.1.0",
   "private": true,
-  "description": "Next.js 15 comparison UI — Without Security Skill vs With Security Skill, wired to real audit output.",
+  "description": "Auth Security Skills Lab comparison UI — Next.js 15 workspace that renders the real baseline and hardened auth source side by side and streams a live security audit.",
   "license": "MIT",
   "scripts": {
     "dev": "next dev -p 3000",
@@ -26,5 +26,12 @@
     "@types/react-dom": "^19.0.2",
     "tailwindcss": "^4.0.0",
     "typescript": "^5.7.2"
-  }
+  },
+  "keywords": [
+    "nextjs",
+    "react",
+    "security",
+    "authentication",
+    "comparison-ui"
+  ]
 }

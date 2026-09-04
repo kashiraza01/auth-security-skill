@@ -2,7 +2,7 @@
   "name": "@auth-lab/security-tests",
   "version": "0.1.0",
   "private": true,
-  "description": "Standalone adversarial auditor for the auth demo. Probes both /baseline and /hardened, emits docs/findings.json.",
+  "description": "Auth Security Skills Lab auditor wrapper — spawns the demo backend and runs the auth-security-breaker probe CLI against both auth stacks.",
   "license": "MIT",
   "type": "commonjs",
   "scripts": {
@@ -12,5 +12,12 @@
   },
   "devDependencies": {
     "tsx": "^4.19.2"
-  }
+  },
+  "keywords": [
+    "security-testing",
+    "authentication",
+    "audit",
+    "user-enumeration",
+    "timing-attack"
+  ]
 }
